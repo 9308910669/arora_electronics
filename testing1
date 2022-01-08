@@ -1,0 +1,51 @@
+import datetime
+import mysql.connector
+mydb = mysql.connector.connect(user = 'root' , password = 'imlovish1234' ,
+                               host = 'localhost' , database = 'null2')
+mycursor = mydb.cursor()
+
+def create_table():
+    try:
+    
+        sql = "CREATE TABLE CUSTOMER10(customer_name VARCHAR(40),\
+                dob date,\
+                customer_id INT NOT NULL AUTO_INCREMENT,\
+                ph_no varchar(10),primary key(customer_id));"
+        mycursor.execute(sql)
+        mydb.commit()
+        print("creating table")
+    except:
+        print("error")
+
+def add():
+    while True:
+        now = datetime.datetime.now()
+        sql="INSERT INTO customer10(customer_name ,dob, ph_no) values (%s,%s,%s)"
+        name=input("Enter name :")
+        p_no = int(input("enter phone no"))
+        val=(name,now,p_no)
+        mycursor.execute(sql,val)
+        mydb.commit()
+        ch = input("do you want to add more data : ")
+        if ch == 'n' or ch == 'N' :
+            break
+def update():
+    try:
+        show = "select * from customer10"
+        mycursor.execute(show)
+        a = int(input("enter id :  "))
+        for i in mycursor:
+            i = list(i)
+            if i[2] == a:
+                new = input("enter new name :  ")
+                sql = "UPDATE customer10 SET customer_name=%s WHERE  customer_id= %s"
+                val = (new,a)
+                mycursor.execute(sql,val)
+                mydb.commit()
+                print("account updated")
+    except:
+        print("something is wrong")
+        
+#create_table()
+#add()
+update()
