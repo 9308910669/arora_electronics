@@ -1,0 +1,36 @@
+C:\Users\imlov\anaconda3\pythonw.exe "C:/Users/imlov/Desktop/New folder (5)/ARORA ELECTRONICS.py"
+			 1. Create Customer Table
+			 2. Show Customer Table
+			 3. Add Record Into Table
+			 4. Update Record
+			 5. Search Into Customer Table
+			 6. Delete Record
+			 7. Back (Main Menu)
+			 8. Exit
+		Enter Your Choice :3
+enter customer's name :  ded
+enter customer's phone number :  323
+enter customer's address :  xs
+enter the type of product :   sx
+specify the problem in the product :  w
+Traceback (most recent call last):
+  File "C:\Users\imlov\anaconda3\lib\site-packages\mysql\connector\connection_cext.py", line 516, in cmd_query
+    self._cmysql.query(query,
+_mysql_connector.MySQLInterfaceError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')values('ded','323','xs','sx','2022-03-31 16:39:37.970464','w','2022-03-31 16:39' at line 1
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:/Users/imlov/Desktop/New folder (5)/ARORA ELECTRONICS.py", line 309, in <module>
+    data_management()
+  File "C:/Users/imlov/Desktop/New folder (5)/ARORA ELECTRONICS.py", line 26, in data_management
+    add()
+  File "C:/Users/imlov/Desktop/New folder (5)/ARORA ELECTRONICS.py", line 90, in add
+    mycursor.execute(sql,val,)
+  File "C:\Users\imlov\anaconda3\lib\site-packages\mysql\connector\cursor_cext.py", line 269, in execute
+    result = self._cnx.cmd_query(stmt, raw=self._raw,
+  File "C:\Users\imlov\anaconda3\lib\site-packages\mysql\connector\connection_cext.py", line 521, in cmd_query
+    raise errors.get_mysql_exception(exc.errno, msg=exc.msg,
+mysql.connector.errors.ProgrammingError: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')values('ded','323','xs','sx','2022-03-31 16:39:37.970464','w','2022-03-31 16:39' at line 1
+
+Process finished with exit code 1
