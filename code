@@ -1,5 +1,7 @@
 # ARORA ELECTRONICS
 
+# ARORA ELECTRONICS
+
 import datetime
 import mysql.connector
 mydb = mysql.connector.connect(user = 'root' , password = 'imlovish1234' ,
@@ -8,33 +10,44 @@ mycursor = mydb.cursor()
 
 
 def data_management():
-    print("\t\t\t 1. Create Customer Table")
-    print("\t\t\t 2. Show Customer Table")
-    print("\t\t\t 3. Add Record Into Table")
-    print("\t\t\t 4. Update Record")
-    print("\t\t\t 5. Search Into Customer Table")
-    print("\t\t\t 6. Delete Record")
-    print("\t\t\t 7. Back (Main Menu)")
-    print("\t\t\t 8. Exit")
-    p = int(input("\t\tEnter Your Choice :"))
+    while True:
+        try:
 
-    if p == 1:
-        create_table()
-    if p == 2:
-        show_customer_table()
-    if p == 3:
-        add()
-    if p == 4:
-        update()
-    if p == 5:
-        search()
-    if p == 6 :
-        delete()
-    if p == 7:
-        data_management()
-    if p == 8:
-        exit()
+            print()
+            print()
+            print('----------------------------------------------')
+            print("\t\t\t 1. Create Customer Table")
+            print("\t\t\t 2. Show Customer Table")
+            print("\t\t\t 3. Add Record Into Table")
+            print("\t\t\t 4. Update Record")
+            print("\t\t\t 5. Search Into Customer Table")
+            print("\t\t\t 6. Delete Record")
+            print("\t\t\t 7. Arrange By")
+            print("\t\t\t 8. Exit")
+            print('----------------------------------------------')
+            print()
+            p = int(input("\t\tEnter Your Choice: "))
 
+            if p == 1:
+                create_table()
+            if p == 2:
+                show_customer_table()
+            if p == 3:
+                add()
+            if p == 4:
+                update()
+            if p == 5:
+                search()
+            if p == 6 :
+                delete()
+            if p == 7:
+                arrange_by()
+            if p == 8:
+                exit()
+
+        except:
+            print("please enter a valid option and try again!")
+            data_management()
 
 def create_table():
     try:
@@ -62,52 +75,64 @@ def create_table():
 def show_customer_table():
     sql = "select * from customer;"
     mycursor.execute(sql)
-    mycursor.fetchall()
-    mydb.commit()
-    for i in mycursor:
-        print(i)
+    result = mycursor.fetchall()
+    for i in result:
+        print('\t\t',i[0],'\t\t',i[1],'\t\t',i[2],'\t\t',i[3],'\t\t',i[4],'\t\t',i[5],'\t\t',i[6],'\t\t',i[7],'\t\t',i[8])
 
 
 def add():
+    try:
+        now = datetime.datetime.now()
+        sql = "INSERT INTO customer(customer_name,\
+                phone_number,\
+                address,\
+                product_type,\
+                date_of_accepting,\
+                problem_in_the_product,\
+                expected_returning_date\
+                    )values(%s,%s,%s,%s,%s,%s,%s);"
 
-
-    now = datetime.datetime.now()
-    sql = "INSERT INTO customer(customer_name,\
-            phone_number,\
-            address,\
-            product_type,\
-            date_of_accepting,\
-            problem_in_the_product,\
-            expected_returning_date,\
-                )values(%s,%s,%s,%s,%s,%s,%s);"
-
-    name = input("enter customer's name :  ")
-    ph_no = input("enter customer's phone number :  ")
-    address = input("enter customer's address :  ")
-    product_name = input("enter the type of product :   ")
-    problem = input("specify the problem in the product :  ")
-    val = (name,ph_no,address,product_name,now,problem,now)
-    mycursor.execute(sql,val,)
-    mydb.commit()
+        name = input("enter customer's name :  ")
+        ph_no = input("enter customer's phone number :  ")
+        address = input("enter customer's address :  ")
+        product_name = input("enter the type of product :   ")
+        problem = input("specify the problem in the product :  ")
+        expected = input("enter expected returning date: ")
+        val = (name,ph_no,address,product_name,now,problem,expected)
+        mycursor.execute(sql,val,)
+        mydb.commit()
+    except:
+        print()
+        print('------------------------------')
+        print("enter data in correct format!")
+        print('------------------------------')
+        add()
 
 def update():
     try:
         cus_id = int(input("enter customer id you want to update: "))
         new_name = input("enter new name:  ")
-        sql = "UPDATE customer SET name=%s WHERE customer_id = %s;"
+        sql = "UPDATE customer SET customer_name = %s WHERE customer_id = %s;"
         val = (new_name,cus_id)
         mycursor.execute(sql,val)
         mydb.commit()
+        print()
+        print('------------------------------')
         print(mycursor.rowcount,'record updated')
+        print('------------------------------')
     except:
+        print()
+        print('------------------------------')
         print("something is wrong!")
+        print('------------------------------')
+        print()
         update()
 
 def delete_by_name():
     name = input("enter the name from record which you want to delete: ")
     sql = "DELETE FROM customer WHERE customer_name = %s;"
     val = (name,)
-    mycursor.execute(val)
+    mycursor.execute(sql,val)
     mydb.commit()
     print(mycursor.rowcount," record deleted!")
     print()
@@ -116,7 +141,7 @@ def delete_by_cus_id():
     name = input("enter the customer id from record which you want to delete: ")
     sql = "DELETE FROM customer WHERE customer_id = %s;"
     val = (name,)
-    mycursor.execute(val)
+    mycursor.execute(sql,val)
     mydb.commit()
     print(mycursor.rowcount, " record deleted!")
     print()
@@ -138,11 +163,10 @@ def delete():
 
 def search_by_name():
     try:
-        ph_no = input("enter phone number whose record you want to search: ")
+        name = input("enter name whose record you want to search: ")
         sql = "SELECT * FROM customer WHERE customer_name = %s;"
-        val = (ph_no,)
+        val = (name,)
         mycursor.execute(sql,val)
-        mydb.commit()
         for i in mycursor:
             print(i)
     except:
@@ -154,11 +178,10 @@ def search_by_name():
 
 def search_by_mo_no():
     try:
-        name = input("enter name whose record you want to search: ")
+        name = input("enter phone number whose record you want to search: ")
         sql = "SELECT * FROM customer WHERE phone_number = %s;"
         val = (name,)
         mycursor.execute(sql, val)
-        mydb.commit()
         for i in mycursor:
             print(i)
     except:
@@ -168,11 +191,10 @@ def search_by_mo_no():
 
 def search_by_cus_id():
     try:
-        name = input("enter name whose record you want to search: ")
+        cu_id = int(input("enter customer id whose record you want to search: "))
         sql = "SELECT * FROM customer WHERE customer_id = %s;"
-        val = (name,)
+        val = (cu_id,)
         mycursor.execute(sql, val)
-        mydb.commit()
         for i in mycursor:
             print(i)
     except:
@@ -211,33 +233,50 @@ def search_by_returming_date():
         search_by_returming_date()
 
 
+
 def search_by_name_like():
     try:
+
         name = input("enter the approx name you remember: ")
-        sql = "SELECT * FROM customer WHERE customer_name LIKE %%;"
+        name = '%' + name + '%'
+        sql = "SELECT * FROM customer WHERE customer_name LIKE %s;"
         val = (name,)
-        mycursor.execute(sql,name)
-        mydb.commit()
+        mycursor.execute(sql,val)
+        print()
+        print('------------------------------')
         for i in mycursor:
             print(i)
+        print('------------------------------')
+
     except:
+        print()
+        print('------------------------------')
         print("No such name found in the database! ")
+        print('------------------------------')
 
 def search_by_address_like():
     try:
         name = input("enter the approx name you remember: ")
-        sql = "SELECT * FROM customer WHERE address LIKE %%;"
+        name = '%' + name + '%'
+        sql = "SELECT * FROM customer WHERE address LIKE %s;"
         val = (name,)
-        mycursor.execute(sql,name)
-        mydb.commit()
+        mycursor.execute(sql,val)
+        print()
+        print('------------------------------')
         for i in mycursor:
             print(i)
+        print('------------------------------')
     except:
+        print()
+        print('------------------------------')
         print("No such name found in the database! ")
+        print('------------------------------')
 
 
 def search():
     while True:
+        print()
+        print('\t\t----------------------------------------------')
         print("\t\t\t 1. Search by customer name")
         print("\t\t\t 2. Search by mobile number")
         print("\t\t\t 3. Search by customer id")
@@ -246,9 +285,11 @@ def search():
         print("\t\t\t 6. Search by similar name")
         print("\t\t\t 7. Search by similar address")
         print("\t\t\t 8. Main Menu")
+        print('\t\t----------------------------------------------')
         print()
 
         user  = input("enter no from the above choices: ")
+        print()
         if user == '1':
             search_by_name()
         if user == '2':
@@ -270,33 +311,48 @@ def search():
 def arrange_by_alpha():
     sql = "SELECT * FROM customer ORDER BY customer_name;"
     mycursor.execute(sql)
-    mydb.commit()
+    print()
+    print('------------------------------')
     for i in mycursor:
         print(i)
+    print('------------------------------')
+    print()
 
 def arrange_by_receiving_date():
     sql = "SELECT * FROM customer ORDER BY date_of_accepting;"
     mycursor.execute(sql)
-    mydb.commit()
+    print()
+    print('------------------------------')
     for i in mycursor:
         print(i)
+    print('------------------------------')
+    print()
 
 def arrange_by_cus_id():
     sql = "SELECT * FROM customer ORDER BY customer_id;"
     mycursor.execute(sql)
-    mydb.commit()
+    print()
+    print('------------------------------')
     for i in mycursor:
         print(i)
+    print('------------------------------')
+    print()
 
 def arrange_by():
     while True:
+        print()
+        print('------------------------------')
         print("\t\t\t 1. Arrange by customer name")
         print("\t\t\t 2. Arrange by receiving date")
         print("\t\t\t 3. Arrange by customer id")
         print("\t\t\t 4. Main Menu")
+        print('------------------------------')
         print()
 
         user = input("enter no from the above choices: ")
+        print()
+        print('------------------------------')
+
         if user == '1':
             arrange_by_alpha()
         if user == '2':
@@ -305,5 +361,27 @@ def arrange_by():
             arrange_by_cus_id()
         if user == '4':
             data_management()
+
+
+def login():
+    password = "imlovish1234"
+    print('-------------------------------------------------')
+    password1 = input("enter password to login into ARORA ELECTRONICS: ")
+    print('-------------------------------------------------')
+    if (password1 == password) :
+        print()
+        print('-------------------------------------------------')
+        print("  WELCOME TO THE DATABASE OF ARORA ELECTRONICS!")
+        print('-------------------------------------------------')
+        print()
+        a = input("Press ENTER Key to proceed to main menu: ")
+        while a != " ":
+            data_management()
+
+    else:
+        print()
+        print("TRY AGAIN!")
+        print()
+        login()
 
 data_management()
